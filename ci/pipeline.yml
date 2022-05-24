@@ -12,6 +12,19 @@ jobs:
   - set_pipeline: self
     file: pipeline-source/ci/pipeline.yml
 
+- name: deploy-cspr-collector-development
+  serial_groups: [development]
+  plan:
+  - in_parallel:
+    - get: cspr-collector-app
+      trigger: true
+    - get: config-source
+      trigger: true
+  - put: deploy-cspr-collector-development
+    params:
+      manifest: config-source/manifest.yml
+      path: cspr-collector-app
+      current_app_name: cspr-collector
 
 resources:
 
@@ -21,3 +34,24 @@ resources:
     uri: https://github.com/cloud-gov/deploy-cspr-collector
     branch: inital-deploy
     paths: [ci/pipeline.yml]
+
+- name: config-source
+  type: git
+  source:
+    uri: https://github.com/cloud-gov/deploy-cspr-collector
+    branch: inital-deploy
+
+- name: cspr-collector-app
+  type: git
+  source:
+    uri: https://github.com/soutenniza/cspr-collector
+
+- name: deploy-cspr-collector-development
+  type: cf
+  source:
+    api: ((development-cf-api-url))
+    username: ((development-cf-deploy.username))
+    password: ((development-cf-deploy.password))
+    organization: cloud-gov
+    space: cspr-collector
+    skip_cert_check: false
