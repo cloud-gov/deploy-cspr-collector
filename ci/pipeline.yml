@@ -1,0 +1,23 @@
+
+---
+jobs:
+
+- name: configure-pipeline
+  serial_groups: [development,staging, production]
+  plan:
+  - in_parallel:
+    - get: pipeline-source
+      trigger: true
+      params: {depth: 1}
+  - set_pipeline: self
+    file: pipeline-source/ci/pipeline.yml
+
+
+resources:
+
+- name: pipeline-source
+  type: git
+  source:
+    uri: https://github.com/cloud-gov/deploy-cspr-collector
+    branch: inital-deploy
+    paths: [ci/pipeline.yml]
