@@ -50,8 +50,8 @@ resources:
   type: cf
   source:
     api: ((development-cf-api-url))
-    username: ((development-cf-deploy.username))
-    password: ((development-cf-deploy.password))
+    username: ((development-cf-deployer.username))
+    password: ((development-cf-deployer.password))
     organization: cloud-gov
     space: cspr-collector
     skip_cert_check: false
