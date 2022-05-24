@@ -74,3 +74,10 @@ resources:
     password: ((development-cf-deployer.password))
     org: cloud-gov
     space: cspr-collector
+
+resource_types:
+- name: cf-cli-resource
+  type: docker-image
+  source:
+    repository: nulldriver/cf-cli-resource
+    tag: latest
