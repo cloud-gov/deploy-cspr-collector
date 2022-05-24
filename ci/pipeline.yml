@@ -20,6 +20,16 @@ jobs:
       trigger: true
     - get: config-source
       trigger: true
+  - put: create-es
+    resource: cf-cli-dev
+    params: &aws-es-params
+      command: create-service
+      update_service: true
+      wait_for_service: true
+      timeout: 1200  
+      service_instance: cspr-collector-aws-es
+      service: aws-elasticsearch
+      plan: es-dev
   - put: deploy-cspr-collector-development
     params:
       manifest: config-source/manifest.yml
@@ -55,3 +65,12 @@ resources:
     organization: cloud-gov
     space: cspr-collector
     skip_cert_check: false
+
+- name: cf-cli-dev
+  type: cf-cli-resource
+  source:
+    api: ((development-cf-api-url))
+    username: ((development-cf-deployer.username))
+    password: ((development-cf-deployer.password))
+    org: cloud-gov
+    space: cspr-collector

@@ -5,7 +5,9 @@ applications:
   instances: 1
   buildpacks:
   - go_buildpack
-  command: bin/cspr-collector -host :$PORT -output-stdout 
+  command: bin/cspr-collector -host :$PORT -output-stdout -output-cf-aws-es -output-cf-aws-es-name cspr-collector-aws-es
+  services:
+  - cspr-collector-aws-es
   env:
     GOPACKAGENAME: cspr-collector
     GO111MODULE: "on"
