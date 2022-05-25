@@ -64,6 +64,35 @@ jobs:
       path: cspr-collector-app
       current_app_name: cspr-collector
 
+- name: deploy-cspr-collector-production
+  serial_groups: [production]
+  plan:
+  - in_parallel:
+    - get: cspr-collector-app
+      passed: 
+      - deploy-cspr-collector-staging
+      trigger: true
+    - get: config-source
+      passed: 
+      - deploy-cspr-collector-staging
+      trigger: true
+  - put: create-es
+    resource: cf-cli-production
+    params: 
+      command: create-service
+      update_service: true
+      wait_for_service: true
+      timeout: 1200  
+      service_instance: cspr-collector-aws-es
+      service: aws-elasticsearch
+      plan: es-dev
+  - put: deploy-cspr-collector-production
+    params:
+      manifest: config-source/manifest.yml
+      path: cspr-collector-app
+      current_app_name: cspr-collector
+
+
 resources:
 
 - name: pipeline-source
@@ -119,6 +148,25 @@ resources:
     api: https://api.fr-stage.cloud.gov
     username: ((staging-cf-deployer.username))
     password: ((staging-cf-deployer.password))
+    org: cloud-gov
+    space: cspr-collector
+
+- name: deploy-cspr-collector-production
+  type: cf
+  source:
+    api: https://api.fr.cloud.gov
+    username: ((production-cf-deployer.username))
+    password: ((production-cf-deployer.password))
+    organization: cloud-gov
+    space: cspr-collector
+    skip_cert_check: false
+
+- name: cf-cli-production
+  type: cf-cli-resource
+  source:
+    api: https://api.fr.cloud.gov
+    username: ((production-cf-deployer.username))
+    password: ((production-cf-deployer.password))
     org: cloud-gov
     space: cspr-collector
 
