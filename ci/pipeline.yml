@@ -36,6 +36,34 @@ jobs:
       path: cspr-collector-app
       current_app_name: cspr-collector
 
+- name: deploy-cspr-collector-staging
+  serial_groups: [staging]
+  plan:
+  - in_parallel:
+    - get: cspr-collector-app
+      passed: 
+      - deploy-cspr-collector-development
+      trigger: true
+    - get: config-source
+      passed: 
+      - deploy-cspr-collector-development
+      trigger: true
+  - put: create-es
+    resource: cf-cli-staging
+    params: 
+      command: create-service
+      update_service: true
+      wait_for_service: true
+      timeout: 1200  
+      service_instance: cspr-collector-aws-es
+      service: aws-elasticsearch
+      plan: es-dev
+  - put: deploy-cspr-collector-staging
+    params:
+      manifest: config-source/manifest.yml
+      path: cspr-collector-app
+      current_app_name: cspr-collector
+
 resources:
 
 - name: pipeline-source
@@ -59,7 +87,7 @@ resources:
 - name: deploy-cspr-collector-development
   type: cf
   source:
-    api: ((development-cf-api-url))
+    api: https://api.dev.us-gov-west-1.aws-us-gov.cloud.gov
     username: ((development-cf-deployer.username))
     password: ((development-cf-deployer.password))
     organization: cloud-gov
@@ -69,11 +97,31 @@ resources:
 - name: cf-cli-dev
   type: cf-cli-resource
   source:
-    api: ((development-cf-api-url))
+    api: https://api.dev.us-gov-west-1.aws-us-gov.cloud.gov
     username: ((development-cf-deployer.username))
     password: ((development-cf-deployer.password))
     org: cloud-gov
     space: cspr-collector
+
+- name: deploy-cspr-collector-staging
+  type: cf
+  source:
+    api: https://api.fr-stage.cloud.gov
+    username: ((staging-cf-deployer.username))
+    password: ((staging-cf-deployer.password))
+    organization: cloud-gov
+    space: cspr-collector
+    skip_cert_check: false
+
+- name: cf-cli-staging
+  type: cf-cli-resource
+  source:
+    api: https://api.fr-stage.cloud.gov
+    username: ((staging-cf-deployer.username))
+    password: ((staging-cf-deployer.password))
+    org: cloud-gov
+    space: cspr-collector
+
 
 resource_types:
 - name: cf-cli-resource
