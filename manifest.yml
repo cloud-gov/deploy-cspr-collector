@@ -9,7 +9,7 @@ applications:
   services:
   - cspr-collector-aws-es
   routes:
-  - ((route))
+  - route: ((route))
   env:
     GOPACKAGENAME: cspr-collector
     GO111MODULE: "on"
