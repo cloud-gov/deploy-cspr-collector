@@ -35,6 +35,8 @@ jobs:
       manifest: config-source/manifest.yml
       path: cspr-collector-app
       current_app_name: cspr-collector
+      vars:
+        - route=cspr-collector.dev.us-gov-west-1.aws-us-gov.cloud.gov
 
 - name: deploy-cspr-collector-staging
   serial_groups: [staging]
@@ -63,6 +65,8 @@ jobs:
       manifest: config-source/manifest.yml
       path: cspr-collector-app
       current_app_name: cspr-collector
+      vars:
+        - route=cspr-collector.fr-stage.cloud.gov
 
 - name: deploy-cspr-collector-production
   serial_groups: [production]
@@ -91,6 +95,8 @@ jobs:
       manifest: config-source/manifest.yml
       path: cspr-collector-app
       current_app_name: cspr-collector
+      vars:
+        - route=cspr-collector.fr.cloud.gov
 
 
 resources:

@@ -8,6 +8,8 @@ applications:
   command: bin/cspr-collector -host :$PORT -output-stdout -output-cf-aws-es -output-cf-aws-es-name cspr-collector-aws-es -output-aws-es-region us-gov-west-1
   services:
   - cspr-collector-aws-es
+  routes:
+  - ((route))
   env:
     GOPACKAGENAME: cspr-collector
     GO111MODULE: "on"
