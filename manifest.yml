@@ -5,7 +5,7 @@ applications:
   instances: 1
   buildpacks:
   - go_buildpack
-  command: bin/cspr-collector -host :$PORT -output-stdout -output-cf-aws-es -output-cf-aws-es-name cspr-collector-aws-es
+  command: bin/cspr-collector -host :$PORT -output-stdout -output-cf-aws-es -output-cf-aws-es-name cspr-collector-aws-es -output-aws-es-region us-gov-west-1
   services:
   - cspr-collector-aws-es
   env:
