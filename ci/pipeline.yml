@@ -107,12 +107,14 @@ resources:
     uri: https://github.com/cloud-gov/deploy-cspr-collector
     branch: inital-deploy
     paths: [ci/pipeline.yml]
+    commit_verification_keys: ((cloud-gov-pgp-keys))
 
 - name: config-source
   type: git
   source:
     uri: https://github.com/cloud-gov/deploy-cspr-collector
     branch: inital-deploy
+    commit_verification_keys: ((cloud-gov-pgp-keys))
 
 - name: cspr-collector-app
   type: git
